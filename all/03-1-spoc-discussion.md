@@ -42,7 +42,65 @@ NOTICE
 
 请参考ucore lab2代码，采用`struct pmm_manager` 根据你的`学号 mod 4`的结果值，选择四种（0:最优匹配，1:最差匹配，2:最先匹配，3:buddy systemm）分配算法中的一种或多种，在应用程序层面(可以 用python,ruby,C++，C，LISP等高语言)来实现，给出你的设思路，并给出测试用例。 (spoc)
 
---- 
+```python
+  class Test:
+    def __init__(self,size):
+        self.space = [size]
+        self.use_list = [0]
+        self.use_dict = {}
+
+    def malloc(self,name,size):
+        flag = 0
+        for i in range(len(self.space)):
+            if self.space[i] >= size and self.use_list[i] == 0:
+                if self.space[i] < 2 * size:
+                    self.use_list[i] = 1
+                    self.use_dict[name] = i
+                    flag = 1
+                    break
+                else:
+                    self.space.insert(i,self.space[i] / 2)
+                    self.space[i + 1] = self.space[i]
+                    self.use_list.insert(i,0)
+                    self.malloc(name,size)
+                    if name in self.use_dict:
+                        return
+        if flag == 0:
+            print "malloc false"
+        return self.space
+
+    def demalloc(self,name):
+        index = ""
+        try:
+            index = self.use_dict[name]
+        except:
+            return "no name"
+        self.use_list[index] = 0
+        if index == 0:
+            if self.use_list[1] == 0:
+                self.space[1] += self.space[0]
+                del(self.space[0])
+                del(self.use_list[0])
+        else:
+            if self.use_list[index - 1] == 0 and self.space[index - 1] == self.space[index]:
+                self.space[index] += self.space[index - 1]
+                del(self.space[index - 1])
+                del(self.use_list[index - 1])
+            if self.use_list[index + 1] == 0 and self.space[index + 1] == self.space[index]:
+                self.space[index + 1] += self.space[index - 1]
+                del(self.space[index])
+                del(self.use_list[index])
+        i = 0
+        while i < len(self.space) - 1:
+            if self.use_list[i] == 0:
+                if self.use_list[i + 1] == 0 and self.space[i + 1] == self.space[i]:
+                    self.space[i + 1] += self.space[i]
+                    del(self.space[i])
+                    del(self.use_list[i])
+                    i -= 1
+            i += 1
+        return self.space
+``` 
 
 ## 扩展思考题
 
