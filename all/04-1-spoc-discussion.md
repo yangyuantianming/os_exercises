@@ -49,7 +49,23 @@ void main (void) {
   printf("%d count computing over!\n",i*j*k);
 }
 ```
+结果：
+```
+[yangyuan@localhost OS]$ time ./goodlocality 
+10485760 count computing over!
 
+real	0m0.034s
+user	0m0.030s
+sys	0m0.004s
+[yangyuan@localhost OS]$ time ./badlocality 
+10485760 count computing over!
+
+real	0m0.209s
+user	0m0.207s
+sys	0m0.003s
+
+```
+可见，差别十分巨大！
 
 
 ## 小组思考题目
