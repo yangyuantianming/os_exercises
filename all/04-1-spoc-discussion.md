@@ -149,6 +149,55 @@ Virtual Address 1e6f(0 001_11 10_011 0_1111):
            0d 15 0a 1a 0c 12 1e 11 0e 02 1d 10 15 14 07 13
       --> To Disk Sector Address 0x2cf(0001011001111) --> Value: 1c
 ```
+```python
+
+fp = open("page.txt", "r")
+page = []
+for line in fp:
+    line = line[9:].replace('\n', '')
+    page.append(line.split(' '))
+fp.close()
+fp = open("disk.txt", "r")
+disk = []
+for line in fp:
+    line = line[9:]
+    disk.append(line.split(' '))
+fp.close()
+
+pde = page[0x6c]
+addr = [0x6653, 0x1c13, 0x6890, 0x0af6, 0x1e6f, 0x0330, 0x1e6f]
+for i in addr:
+    print "Virtual Address 0x%04x" %i, "-->",
+    pde_index = (i & 0x7ffff)>>10
+    pde_cnt = int(pde[pde_index], 16)
+    valid = pde_cnt >> 7
+    pfn = 0
+    if valid == 1:
+        pfn = pde_cnt & 0x7f
+    else:
+        print "Error!"
+        continue
+    pte_index = (i & 0x3ff)>>5
+    pte_cnt = int(page[pfn][pte_index], 16)
+    valid = pte_cnt >> 7
+    pfn = pte_cnt & 0x7f
+    idx = i & 0x1f
+    val = 0
+    if valid==1:
+        val = int(page[pfn][idx], 16)
+    else:
+        val = int(disk[pfn][idx], 16)
+    print "Value: 0x%02x " %val
+```
+```
+Virtual Address 0x6653 --> Error!
+Virtual Address 0x1c13 --> Value: 0x12 
+Virtual Address 0x6890 --> Error!
+Virtual Address 0x0af6 --> Value: 0x03 
+Virtual Address 0x1e6f --> Value: 0x1c 
+
+```
+
 
 ## 扩展思考题
 ---
