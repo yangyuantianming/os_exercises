@@ -41,7 +41,48 @@
 2. （spoc)了解race condition. 进入[race-condition代码目录](https://github.com/chyyuu/ucore_lab/tree/master/related_info/lab7/race-condition)。
 
  - 执行 `./x86.py -p loop.s -t 1 -i 100 -R dx`， 请问`dx`的值是什么？
+ ```
+   dx          Thread 0         
+    0   
+   -1   1000 sub  $1,%dx
+   -1   1001 test $0,%dx
+   -1   1002 jgte .top
+   -1   1003 halt
+
+ ```
  - 执行 `./x86.py -p loop.s -t 2 -i 100 -a dx=3,dx=3 -R dx` ， 请问`dx`的值是什么？
+ ```
+    dx          Thread 0                Thread 1         
+    3   
+    2   1000 sub  $1,%dx
+    2   1001 test $0,%dx
+    2   1002 jgte .top
+    1   1000 sub  $1,%dx
+    1   1001 test $0,%dx
+    1   1002 jgte .top
+    0   1000 sub  $1,%dx
+    0   1001 test $0,%dx
+    0   1002 jgte .top
+   -1   1000 sub  $1,%dx
+   -1   1001 test $0,%dx
+   -1   1002 jgte .top
+   -1   1003 halt
+    3   ----- Halt;Switch -----  ----- Halt;Switch -----  
+    2                            1000 sub  $1,%dx
+    2                            1001 test $0,%dx
+    2                            1002 jgte .top
+    1                            1000 sub  $1,%dx
+    1                            1001 test $0,%dx
+    1                            1002 jgte .top
+    0                            1000 sub  $1,%dx
+    0                            1001 test $0,%dx
+    0                            1002 jgte .top
+   -1                            1000 sub  $1,%dx
+   -1                            1001 test $0,%dx
+   -1                            1002 jgte .top
+   -1                            1003 halt
+
+ ```
  - 执行 `./x86.py -p loop.s -t 2 -i 3 -r -a dx=3,dx=3 -R dx`， 请问`dx`的值是什么？
  - 变量x的内存地址为2000, `./x86.py -p looping-race-nolock.s -t 1 -M 2000`, 请问变量x的值是什么？
  - 变量x的内存地址为2000, `./x86.py -p looping-race-nolock.s -t 2 -a bx=3 -M 2000`, 请问变量x的值是什么？为何每个线程要循环3次？
