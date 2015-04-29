@@ -126,7 +126,6 @@
    -1   ------ Interrupt ------  ------ Interrupt ------  
    -1   1002 jgte .top
    -1   1003 halt
-
 ```
  - 变量x的内存地址为2000, `./x86.py -p looping-race-nolock.s -t 1 -M 2000`, 请问变量x的值是什么？
 ```
@@ -139,7 +138,6 @@
     1   1004 test $0, %bx
     1   1005 jgt .top
     1   1006 halt
-
 ```
 
  - 变量x的内存地址为2000, `./x86.py -p looping-race-nolock.s -t 2 -a bx=3 -M 2000`, 请问变量x的值是什么？为何每个线程要循环3次？
