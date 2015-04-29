@@ -161,7 +161,7 @@ int CompareAndSwap(int *ptr, int expected, int new) {
   return actual;
 }
 ```
-
+...
 ```
 Fetch-And-Add
 
