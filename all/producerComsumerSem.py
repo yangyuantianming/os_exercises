@@ -57,6 +57,6 @@ for i in range(N):
 	p.start()
 
 c = Comsumer("one", full, empty, mutex)
-c.start()
+c.start() 
 
 
