@@ -60,4 +60,3 @@ c = Comsumer("one", full, empty, mutex)
 c.start()
 
 
-
